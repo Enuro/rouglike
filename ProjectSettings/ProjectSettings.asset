@@ -754,10 +754,10 @@ PlayerSettings:
   captureStartupLogs: {}
   activeInputHandler: 2
   windowsGamepadBackendHint: 0
-  cloudProjectId: 60918be6-f321-4183-95c9-0dc4a9fa34a1
+  cloudProjectId: 911104cf-2d22-4f9f-bba9-dd880f694f6a
   framebufferDepthMemorylessMode: 0
   qualitySettingsNames: []
-  projectName: rouglike 2025-01-22_16-47-02
+  projectName: rouglike
   organizationId: unity_ltq08pkerkftna
   cloudEnabled: 0
   legacyClampBlendShapeWeights: 0
