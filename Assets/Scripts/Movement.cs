@@ -41,11 +41,17 @@ public class Movement : MonoBehaviour
 
     private void JumpLogic()
     {
+        float moveHorizontal = Input.GetAxis("Horizontal");
+
+        float moveVertical = Input.GetAxis("Vertical");
+
+        Vector3 movement = new Vector3(moveHorizontal, 0.0f, moveVertical);
+
         if (Input.GetAxis("Jump") > 0)
         {
             if (_isGrounded)
             {
-                _rb.AddForce(Vector3.up * JumpForce);
+                _rb.AddForce(movement * 50f);
             }
         }
     }
