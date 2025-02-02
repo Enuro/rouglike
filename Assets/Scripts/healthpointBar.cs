@@ -7,7 +7,7 @@ public class healthpointBat: MonoBehaviour
     public Slider easeHealthSlider;
     public float maxHealthpoint = 100f;
     public float healthpoint;
-    private float lerpSpeed = 0.005f;
+    private float lerpSpeed = 0.05f;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -27,6 +27,7 @@ public class healthpointBat: MonoBehaviour
         {
             takeDamage(10);
         }
+
         if (healthSlider.value != easeHealthSlider.value) 
         { 
             easeHealthSlider.value = Mathf.Lerp(easeHealthSlider.value, healthpoint, lerpSpeed);
