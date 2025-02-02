@@ -51,7 +51,7 @@ public class Movement : MonoBehaviour
         {
             if (_isGrounded)
             {
-                _rb.AddForce(movement * 50f);
+                _rb.AddForce(movement * 80f);
             }
         }
     }
