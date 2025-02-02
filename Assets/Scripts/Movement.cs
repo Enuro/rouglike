@@ -3,9 +3,9 @@ using UnityEngine;
 [RequireComponent(typeof(Rigidbody))]
 public class Movement : MonoBehaviour
 {
-    public float runSpeed = 20f;
-    public float walkSpeed = 10f;
-    public float JumpForce = 30f;
+    public float runSpeed = 30f;
+    public float walkSpeed = 15f;
+    public float JumpForce = 80f;
 
     private bool _isGrounded;
     private Rigidbody _rb;
@@ -51,7 +51,7 @@ public class Movement : MonoBehaviour
         {
             if (_isGrounded)
             {
-                _rb.AddForce(movement * 80f);
+                _rb.AddForce(movement * JumpForce);
             }
         }
     }

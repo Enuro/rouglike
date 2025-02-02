@@ -5,7 +5,7 @@ public class healthpointBat: MonoBehaviour
 {
     public Slider healthSlider;
     public Slider easeHealthSlider;
-    public float maxHealthpoint = 100f;
+    public float maxHealthpoint = 1000f;
     public float healthpoint;
     private float lerpSpeed = 0.05f;
 
@@ -25,7 +25,7 @@ public class healthpointBat: MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.Space))
         {
-            takeDamage(10);
+            takeDamage(150);
         }
 
         if (healthSlider.value != easeHealthSlider.value) 
