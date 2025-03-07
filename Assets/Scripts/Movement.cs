@@ -1,76 +1,154 @@
 using UnityEngine;
 
-[RequireComponent(typeof(Rigidbody))]
 public class Movement : MonoBehaviour
 {
-    public float runSpeed = 30f;
-    public float walkSpeed = 15f;
-    public float JumpForce = 80f;
+    // Твои текущие переменные
+    public float walkSpeed = 5f;
+    public float runSpeed = 8f;
+    public float dashSpeed = 50f;
+    public float dashTime = 0.5f;
+    public float dashCooldown = 1f;
+    public float dashStaminaCost = 25f;
 
-    private bool _isGrounded;
-    private Rigidbody _rb;
+    private Vector3 _moveDirection;
+    private CharacterController _controller;
+    public StaminaBar staminaBar;
+
+    private bool isDashing = false;
+    private float dashTimer = 0f;
+    private float lastDashTime = -999f;
+    private float staminaRecoveryTimer = 0f;
+
+    // Новая переменная для модели персонажа (Walking)
+    public Transform walkingModel; // Перетащи сюда объект Walking в инспекторе
+
+    // Новая переменная для плоскости
+    private Plane groundPlane;
 
     void Start()
     {
-        _rb = GetComponent<Rigidbody>();
+        _controller = GetComponent<CharacterController>();
+        // Создаем плоскость на уровне персонажа
+        groundPlane = new Plane(Vector3.up, transform.position);
+    }
+
+    void Update()
+    {
+        if (isDashing) return;
+
+        MovementLogic();
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            StartDash();
+        }
+
+        // Вызов метода для вращения модели персонажа
+        RotateModelTowardsMouse();
     }
 
     void FixedUpdate()
     {
-        MovementLogic();
-        JumpLogic();
+        if (isDashing)
+        {
+            DashLogic();
+        }
     }
 
     private void MovementLogic()
     {
-        float moveHorizontal = Input.GetAxis("Horizontal");
+        float moveHorizontal = Input.GetAxisRaw("Horizontal");
+        float moveVertical = Input.GetAxisRaw("Vertical");
 
-        float moveVertical = Input.GetAxis("Vertical");
+        _moveDirection = new Vector3(moveHorizontal, 0, moveVertical).normalized;
 
-        Vector3 movement = new Vector3(moveHorizontal, 0.0f, moveVertical);
+        float currentSpeed = walkSpeed;
+        bool isRunning = Input.GetKey(KeyCode.LeftShift) && staminaBar.stamina > 0 && staminaRecoveryTimer <= 0;
 
-        if (Input.GetKeyDown(KeyCode.LeftShift))
+        if (isRunning)
         {
-            _rb.AddForce(movement * runSpeed);
+            currentSpeed = runSpeed;
+        }
+
+        HandleStamina(isRunning);
+
+        _controller.Move(_moveDirection * currentSpeed * Time.deltaTime);
+    }
+
+    private void HandleStamina(bool isRunning)
+    {
+        if (isRunning)
+        {
+            staminaBar.stamina -= 20f * Time.deltaTime;
+            if (staminaBar.stamina <= 0)
+            {
+                staminaRecoveryTimer = 2f; // Запрещаем бег на 2 секунды
+            }
+        }
+        else if (staminaRecoveryTimer <= 0)
+        {
+            staminaBar.stamina += 10f * Time.deltaTime;
+        }
+
+        if (staminaRecoveryTimer > 0)
+        {
+            staminaRecoveryTimer -= Time.deltaTime;
+        }
+
+        staminaBar.stamina = Mathf.Clamp(staminaBar.stamina, 0, staminaBar.maxStamina);
+    }
+
+    private void StartDash()
+    {
+        if (Time.time - lastDashTime < dashCooldown || staminaBar.stamina < dashStaminaCost) return;
+
+        staminaBar.stamina -= dashStaminaCost;
+        lastDashTime = Time.time;
+        isDashing = true;
+        dashTimer = dashTime;
+    }
+
+    private void DashLogic()
+    {
+        if (dashTimer > 0)
+        {
+            _controller.Move(_moveDirection * dashSpeed * Time.fixedDeltaTime);
+            dashTimer -= Time.fixedDeltaTime;
         }
         else
         {
-            _rb.AddForce(movement * walkSpeed);
+            isDashing = false;
         }
     }
 
-    private void JumpLogic()
+    // Новый метод для вращения модели персонажа в сторону курсора
+    private void RotateModelTowardsMouse()
     {
-        float moveHorizontal = Input.GetAxis("Horizontal");
+        // Создаем луч из камеры в направлении курсора
+        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+        float enter = 0f;
 
-        float moveVertical = Input.GetAxis("Vertical");
-
-        Vector3 movement = new Vector3(moveHorizontal, 0.0f, moveVertical);
-
-        if (Input.GetAxis("Jump") > 0)
+        // Если луч пересекает плоскость
+        if (groundPlane.Raycast(ray, out enter))
         {
-            if (_isGrounded)
+            // Получаем точку пересечения луча с плоскостью
+            Vector3 hitPoint = ray.GetPoint(enter);
+
+            // Визуализация луча и точки пересечения
+            Debug.DrawLine(ray.origin, hitPoint, Color.red); // Луч от камеры до точки пересечения
+            Debug.DrawLine(hitPoint, hitPoint + Vector3.up * 5f, Color.green); // Линия вверх от точки пересечения
+
+            // Вычисляем направление от модели персонажа к точке пересечения
+            Vector3 direction = (hitPoint - walkingModel.position).normalized;
+
+            // Игнорируем вертикальную ось (Y), чтобы модель не наклонялась
+            direction.y = 0;
+
+            // Создаем поворот в этом направлении
+            if (direction != Vector3.zero)
             {
-                _rb.AddForce(movement * JumpForce);
+                Quaternion lookRotation = Quaternion.LookRotation(direction);
+                walkingModel.rotation = Quaternion.Slerp(walkingModel.rotation, lookRotation, Time.deltaTime * 10f);
             }
-        }
-    }
-
-    void OnCollisionEnter(Collision collision)
-    {
-        IsGroundedUpate(collision, true);
-    }
-
-    void OnCollisionExit(Collision collision)
-    {
-        IsGroundedUpate(collision, false);
-    }
-
-    private void IsGroundedUpate(Collision collision, bool value)
-    {
-        if (collision.gameObject.tag == ("Ground"))
-        {
-            _isGrounded = value;
         }
     }
 }

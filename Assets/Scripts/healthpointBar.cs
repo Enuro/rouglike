@@ -23,11 +23,6 @@ public class healthpointBat: MonoBehaviour
             healthSlider.value = healthpoint;
         }
 
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            takeDamage(150);
-        }
-
         if (healthSlider.value != easeHealthSlider.value) 
         { 
             easeHealthSlider.value = Mathf.Lerp(easeHealthSlider.value, healthpoint, lerpSpeed);
