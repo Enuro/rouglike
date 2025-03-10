@@ -2,7 +2,6 @@ using UnityEngine;
 
 public class Movement : MonoBehaviour
 {
-    // Твои текущие переменные
     public float walkSpeed = 5f;
     public float runSpeed = 8f;
     public float dashSpeed = 50f;
@@ -19,16 +18,13 @@ public class Movement : MonoBehaviour
     private float lastDashTime = -999f;
     private float staminaRecoveryTimer = 0f;
 
-    // Новая переменная для модели персонажа (Walking)
-    public Transform walkingModel; // Перетащи сюда объект Walking в инспекторе
+    public Transform walkingModel; 
 
-    // Новая переменная для плоскости
     private Plane groundPlane;
 
     void Start()
     {
         _controller = GetComponent<CharacterController>();
-        // Создаем плоскость на уровне персонажа
         groundPlane = new Plane(Vector3.up, transform.position);
     }
 
@@ -42,7 +38,6 @@ public class Movement : MonoBehaviour
             StartDash();
         }
 
-        // Вызов метода для вращения модели персонажа
         RotateModelTowardsMouse();
     }
 
@@ -81,7 +76,7 @@ public class Movement : MonoBehaviour
             staminaBar.stamina -= 20f * Time.deltaTime;
             if (staminaBar.stamina <= 0)
             {
-                staminaRecoveryTimer = 2f; // Запрещаем бег на 2 секунды
+                staminaRecoveryTimer = 2f; 
             }
         }
         else if (staminaRecoveryTimer <= 0)
@@ -120,30 +115,22 @@ public class Movement : MonoBehaviour
         }
     }
 
-    // Новый метод для вращения модели персонажа в сторону курсора
     private void RotateModelTowardsMouse()
     {
-        // Создаем луч из камеры в направлении курсора
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
         float enter = 0f;
 
-        // Если луч пересекает плоскость
         if (groundPlane.Raycast(ray, out enter))
         {
-            // Получаем точку пересечения луча с плоскостью
             Vector3 hitPoint = ray.GetPoint(enter);
 
-            // Визуализация луча и точки пересечения
-            Debug.DrawLine(ray.origin, hitPoint, Color.red); // Луч от камеры до точки пересечения
-            Debug.DrawLine(hitPoint, hitPoint + Vector3.up * 5f, Color.green); // Линия вверх от точки пересечения
+            Debug.DrawLine(ray.origin, hitPoint, Color.red); 
+            Debug.DrawLine(hitPoint, hitPoint + Vector3.up * 5f, Color.green);
 
-            // Вычисляем направление от модели персонажа к точке пересечения
             Vector3 direction = (hitPoint - walkingModel.position).normalized;
 
-            // Игнорируем вертикальную ось (Y), чтобы модель не наклонялась
             direction.y = 0;
 
-            // Создаем поворот в этом направлении
             if (direction != Vector3.zero)
             {
                 Quaternion lookRotation = Quaternion.LookRotation(direction);
