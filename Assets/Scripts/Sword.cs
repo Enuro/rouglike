@@ -4,12 +4,13 @@ public class Sword : Weapon
 {
     private void Start()
     {
-        SetAttackBehaviour(new OverlapAttack());
+        SetAttackBehaviour(new ProjectileAttack());
+
     }
 
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Mouse1))
+        if (Input.GetKeyDown(KeyCode.Mouse0))
         {
             PerformAttack();
         }

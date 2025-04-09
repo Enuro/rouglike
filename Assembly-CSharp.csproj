@@ -62,6 +62,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets\Scripts\AttackBehaviour.cs" />
+    <Compile Include="Assets\Scripts\MapGenerate.cs" />
     <Compile Include="Assets\Scripts\ChaseBehaviour.cs" />
     <Compile Include="Assets\Scripts\EDamageable.cs" />
     <Compile Include="Assets\Scripts\RaycastAttack.cs" />
@@ -69,21 +70,19 @@
     <Compile Include="Assets\Scripts\MultiAttackWeapon.cs" />
     <Compile Include="Assets\Scripts\IdleBehaviour.cs" />
     <Compile Include="Assets\Scripts\AttackBehaviourEnemy.cs" />
+    <Compile Include="Assets\Scripts\sword.cs" />
     <Compile Include="Assets\Scripts\EnemyAttack.cs" />
-    <Compile Include="Assets\Scripts\SwordEnemy.cs" />
-    <Compile Include="Assets\Scripts\AltPistol.cs" />
     <Compile Include="Assets\Scripts\IDamageable.cs" />
     <Compile Include="Assets\Scripts\Enemy.cs" />
     <Compile Include="Assets\Scripts\OverlapAttack.cs" />
     <Compile Include="Assets\Scripts\Projectile.cs" />
     <Compile Include="Assets\Scripts\healthpointBar.cs" />
-    <Compile Include="Assets\Scripts\Pistol.cs" />
+    <Compile Include="Assets\Scripts\DesertBiomeGenerator.cs" />
     <Compile Include="Assets\Scripts\PlayerManager.cs" />
     <Compile Include="Assets\Scripts\EnemyClasses.cs" />
     <Compile Include="Assets\Scripts\billboard.cs" />
     <Compile Include="Assets\Scripts\Movement.cs" />
     <Compile Include="Assets\Scripts\ProjectileAttack.cs" />
-    <Compile Include="Assets\Scripts\Sword.cs" />
     <Compile Include="Assets\Scripts\staminaBar.cs" />
     <Compile Include="Assets\Scripts\Weapon.cs" />
   </ItemGroup>
