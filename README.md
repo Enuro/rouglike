@@ -1,2 +1,1 @@
 # rouglike
-Niggers club
